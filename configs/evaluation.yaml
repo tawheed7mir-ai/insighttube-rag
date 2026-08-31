@@ -1,0 +1,5 @@
+app_env: evaluation
+embedding_model: hash-embedding-v1
+llm_provider: local
+features:
+  deterministic: true

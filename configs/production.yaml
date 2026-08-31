@@ -1,0 +1,4 @@
+app_env: production
+embedding_model: sentence-transformers/all-MiniLM-L6-v2
+llm_provider: groq
+notes: Replace local JSON stores with managed vector/search infrastructure before serious production use.

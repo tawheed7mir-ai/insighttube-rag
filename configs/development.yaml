@@ -1,0 +1,8 @@
+app_env: development
+embedding_model: hash-embedding-v1
+llm_provider: local
+features:
+  query_rewrite: false
+  multi_query: false
+  hybrid_search: true
+  reranker: true
