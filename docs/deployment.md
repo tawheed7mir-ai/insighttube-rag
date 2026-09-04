@@ -89,12 +89,6 @@ Do not commit `.env` or any API key to GitHub.
 - **First request is slow:** free Render services sleep when idle and may need time to download embedding or reranker models.
 - **Indexed videos disappear:** Render's local filesystem is ephemeral. Add a persistent disk or move vector, sparse, and source storage to a managed database/object store for production.
 
-### Free transcript fallback
-
-If YouTube returns `403 Forbidden`, use the frontend's **Transcript file / paste**
-section. Add the YouTube URL, then upload a `.txt`, `.srt`, or `.vtt` transcript
-or paste its text and click **Index pasted transcript**. This path does not call
-YouTube and works without a proxy or additional API key.
 
 ## Production requirements
 

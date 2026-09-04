@@ -10,8 +10,6 @@ from app.generation.llm import build_llm_provider
 from app.generation.pipeline import GenerationPipeline
 from app.indexing.pipeline import IndexingPipeline
 from app.ingestion.pipeline import IngestionPipeline
-from app.ingestion.models import TranscriptSegment
-from app.ingestion.youtube import extract_video_id
 from app.retrieval.dense import DenseRetriever
 from app.retrieval.mmr import MMRSelector
 from app.retrieval.neighbor_expansion import NeighborExpander
@@ -42,18 +40,6 @@ class RagService:
 
     def ingest(self, video_or_url: str, **metadata: Any) -> dict[str, Any]:
         result = self.ingestion.run(video_or_url, **metadata)
-        return self._index_ingestion_result(result)
-
-    def ingest_transcript(self, video_or_url: str, transcript: str, **metadata: Any) -> dict[str, Any]:
-        video_id = extract_video_id(video_or_url)
-        segments = [
-            TranscriptSegment(text=line.strip(), start=index * 5, duration=5, end=(index + 1) * 5)
-            for index, line in enumerate(transcript.splitlines())
-            if line.strip()
-        ]
-        if not segments:
-            raise ValueError("Transcript must contain at least one non-empty line")
-        result = self.ingestion.run_segments(video_id=video_id, raw_segments=segments, **metadata)
         return self._index_ingestion_result(result)
 
     def _index_ingestion_result(self, result: Any) -> dict[str, Any]:
