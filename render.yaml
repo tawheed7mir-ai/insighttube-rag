@@ -9,6 +9,10 @@ services:
     envVars:
       - key: APP_ENV
         value: production
+      - key: EMBEDDING_MODEL
+        value: hash-embedding-v1
+      - key: RERANKER_MODEL
+        value: lexical
       - key: APP_API_KEY
         sync: false
       - key: GROQ_API_KEY

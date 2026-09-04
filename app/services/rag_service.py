@@ -71,7 +71,7 @@ class RagService:
         return list(seen.values())
 
     def _build_reranker(self):
-        if self.settings.environment == "test":
+        if self.settings.environment == "test" or self.settings.reranker_model.lower() in {"lexical", "none"}:
             return LexicalReranker()
         try:
             return CrossEncoderReranker(self.settings.reranker_model)
