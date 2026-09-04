@@ -17,7 +17,7 @@ from youtube_transcript_api._errors import (
     VideoUnavailable,
 )
 
-from app.core.exceptions import TranscriptUnavailableError
+from app.core.exceptions import TranscriptError, TranscriptUnavailableError
 from app.ingestion.models import TranscriptSegment
 
 logger = logging.getLogger(__name__)
