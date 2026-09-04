@@ -32,6 +32,9 @@ def ingest(payload: IngestRequest, service: RagService = Depends(get_rag_service
     except TranscriptError as exc:
         logger.exception("Transcript ingestion failed")
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Unexpected ingestion failure")
+        raise HTTPException(status_code=500, detail=f"Ingestion failed: {exc}") from exc
 
 
 @router.post("/query")
