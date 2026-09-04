@@ -100,7 +100,13 @@ def api_request(method: str, path: str, *, show_error: bool = True, **kwargs: An
         return response.json()
     except requests.RequestException as exc:
         if show_error:
-            st.error(f"API unavailable: {exc}. Start it with `uvicorn app.api.main:app --reload`.")
+            detail = ""
+            if exc.response is not None:
+                try:
+                    detail = f" Detail: {exc.response.json().get('detail', exc.response.text)}"
+                except ValueError:
+                    detail = f" Response: {exc.response.text}"
+            st.error(f"API request failed: {exc}.{detail}")
     except ValueError:
         if show_error:
             st.error("The API returned an invalid response.")

@@ -2,24 +2,36 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+import logging
+
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.dependencies import get_rag_service
 from app.api.schemas import EvaluateRequest, IngestRequest, QueryRequest
+from app.core.exceptions import TranscriptError, TranscriptUnavailableError
 from app.services.rag_service import RagService
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 @router.post("/ingest")
 def ingest(payload: IngestRequest, service: RagService = Depends(get_rag_service)):
-    return service.ingest(
-        payload.video_url,
-        title=payload.title,
-        channel=payload.channel,
-        tenant_id=payload.tenant_id,
-        user_id=payload.user_id,
-    )
+    try:
+        return service.ingest(
+            payload.video_url,
+            title=payload.title,
+            channel=payload.channel,
+            tenant_id=payload.tenant_id,
+            user_id=payload.user_id,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except TranscriptUnavailableError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except TranscriptError as exc:
+        logger.exception("Transcript ingestion failed")
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
 
 
 @router.post("/query")

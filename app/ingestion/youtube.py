@@ -64,6 +64,11 @@ class YouTubeTranscriptLoader:
             raise TranscriptUnavailableError(
                 f"Transcript is unavailable for video {video_id}"
             ) from exc
+        except Exception as exc:
+            logger.exception("YouTube transcript provider failed", extra={"video_id": video_id})
+            raise TranscriptError(
+                f"YouTube could not provide a transcript for video {video_id}: {exc}"
+            ) from exc
 
         segments = [TranscriptSegment.from_api_snippet(snippet) for snippet in fetched]
         if not segments:
