@@ -87,6 +87,19 @@ Then open:
 
 If you want a fully cloud-hosted version, deploy the FastAPI backend separately on Render, Railway, or Hugging Face Spaces and point the frontend to that URL with `API_URL`.
 
+## Deploy both services on Render
+
+This repository includes `render.yaml` for a Render Blueprint with two web services:
+
+1. Create a new Blueprint in Render and select this GitHub repository.
+2. Render will create `signal-api` and `signal-frontend` from `render.yaml`.
+3. Set `GROQ_API_KEY` and `APP_API_KEY` on the API service. Keep `APP_API_KEY` empty if authentication is not enabled.
+4. If you rename the API service, update `API_URL` on the frontend to `https://<your-api-service>.onrender.com`.
+
+The API health check is available at `https://<your-api-service>.onrender.com/health`. The frontend must use the public HTTPS API URL; the local Compose hostname `http://api:8000` only works inside Docker Compose.
+
+Render's local filesystem is ephemeral, so newly ingested transcripts and indexes can be lost after a redeploy or restart. Use a persistent disk or external database/object storage for production data.
+
 ## Resume-ready summary
 
 This project demonstrates:
