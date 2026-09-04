@@ -17,6 +17,8 @@ services:
         sync: false
       - key: GROQ_API_KEY
         sync: false
+      - key: YOUTUBE_PROXY
+        sync: false
 
   - type: web
     name: signal-frontend

@@ -153,6 +153,26 @@ if st.button("Load transcript  →", type="primary", use_container_width=True):
             st.session_state.query_result = None
             st.session_state.last_question = ""
             st.rerun()
+st.markdown("<span class='mono'>OR USE A TRANSCRIPT FILE / PASTE</span>", unsafe_allow_html=True)
+transcript_file = st.file_uploader("Transcript file", type=["txt", "srt", "vtt"], label_visibility="collapsed")
+transcript_text = st.text_area("Transcript text", placeholder="Paste the transcript here...", height=120, label_visibility="collapsed")
+if st.button("Index pasted transcript", use_container_width=True):
+    if not video_url.strip():
+        st.warning("Add the YouTube link so citations can point back to the source.")
+    else:
+        uploaded_text = transcript_file.getvalue().decode("utf-8", errors="replace") if transcript_file else ""
+        transcript = uploaded_text or transcript_text
+        if not transcript.strip():
+            st.warning("Upload a transcript file or paste transcript text first.")
+        else:
+            with st.spinner("Building your research index..."):
+                result = api_request("POST", "/ingest-transcript", json={"video_url": video_url.strip(), "transcript": transcript})
+            if result:
+                st.session_state.active_video_id = result.get("video_id")
+                st.session_state.active_source = result
+                st.session_state.query_result = None
+                st.session_state.last_question = ""
+                st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
 
 active_video_id = st.session_state.active_video_id

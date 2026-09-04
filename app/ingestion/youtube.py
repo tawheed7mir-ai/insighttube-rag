@@ -7,6 +7,7 @@ pipeline stages can build trustworthy citations and timestamp links.
 from __future__ import annotations
 
 import logging
+import os
 import re
 from urllib.parse import parse_qs, urlparse
 
@@ -16,6 +17,7 @@ from youtube_transcript_api._errors import (
     TranscriptsDisabled,
     VideoUnavailable,
 )
+from youtube_transcript_api.proxies import GenericProxyConfig
 
 from app.core.exceptions import TranscriptError, TranscriptUnavailableError
 from app.ingestion.models import TranscriptSegment
@@ -58,7 +60,9 @@ class YouTubeTranscriptLoader:
         logger.info("Fetching transcript", extra={"video_id": video_id})
 
         try:
-            api = YouTubeTranscriptApi()
+            proxy_url = os.getenv("YOUTUBE_PROXY")
+            proxy_config = GenericProxyConfig(https_url=proxy_url) if proxy_url else None
+            api = YouTubeTranscriptApi(proxy_config=proxy_config)
             fetched = api.fetch(video_id, languages=[self.language])
         except (TranscriptsDisabled, NoTranscriptFound, VideoUnavailable) as exc:
             raise TranscriptUnavailableError(

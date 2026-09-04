@@ -67,6 +67,18 @@ GROQ_API_KEY=<your Groq key>
 APP_API_KEY=<optional application key>
 ```
 
+YouTube may reject requests from Render datacenter IPs with `403 Forbidden`.
+If that happens, add `YOUTUBE_PROXY` to the API service using a trusted
+residential or mobile HTTP(S) proxy URL, for example:
+
+```text
+YOUTUBE_PROXY=http://username:password@proxy-host:proxy-port
+```
+
+Keep this value secret. A normal web proxy or a proxy without YouTube access
+will not fix the request. Without a proxy, use a transcript provider API or
+upload/paste transcripts instead.
+
 Do not commit `.env` or any API key to GitHub.
 
 ### Troubleshooting
@@ -76,6 +88,13 @@ Do not commit `.env` or any API key to GitHub.
 - **Answers use the fallback generator:** verify `GROQ_API_KEY` is set and the API service has redeployed.
 - **First request is slow:** free Render services sleep when idle and may need time to download embedding or reranker models.
 - **Indexed videos disappear:** Render's local filesystem is ephemeral. Add a persistent disk or move vector, sparse, and source storage to a managed database/object store for production.
+
+### Free transcript fallback
+
+If YouTube returns `403 Forbidden`, use the frontend's **Transcript file / paste**
+section. Add the YouTube URL, then upload a `.txt`, `.srt`, or `.vtt` transcript
+or paste its text and click **Index pasted transcript**. This path does not call
+YouTube and works without a proxy or additional API key.
 
 ## Production requirements
 

@@ -15,6 +15,15 @@ class IngestRequest(BaseModel):
     user_id: str | None = None
 
 
+class TranscriptIngestRequest(BaseModel):
+    video_url: str
+    transcript: str = Field(min_length=1)
+    title: str | None = None
+    channel: str | None = None
+    tenant_id: str | None = None
+    user_id: str | None = None
+
+
 class QueryRequest(BaseModel):
     question: str = Field(min_length=1)
     video_id: str | None = None
